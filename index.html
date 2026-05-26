@@ -5,19 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#084734">
+<meta name="theme-color" content="#1A1A1A">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,300,0,0&display=swap" rel="stylesheet">
 <style>.material-symbols-outlined{font-family:'Material Symbols Outlined';font-style:normal;font-weight:normal;font-size:1.5rem;line-height:1;display:inline-block;}</style>
 <title>Meu Financeiro</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --pr:#084734;--pr2:#0A5C43;
-  --gn:#084734;--gnl:#CDEDB3;--gnm:#CEF17B;
-  --yw:#C45E00;--ywl:#FFF3E0;--ywm:#E07000;
-  --rd:#8B1A1A;--rdl:#FDECEA;--rdm:#8B1A1A;
-  --bg:#CDEDB3;--card:#fff;--txt:#084734;--txt2:#3D6B55;
-  --bdr:#A8D4A0;--navh:68px;--sb:env(safe-area-inset-bottom,0px);
+  --pr:#1A1A1A;--pr2:#333333;
+  --gn:#1A6B3C;--gnl:#F0F7F3;--gnm:#1A6B3C;
+  --yw:#B45309;--ywl:#FFFBEB;--ywm:#B45309;
+  --rd:#B91C1C;--rdl:#FEF2F2;--rdm:#B91C1C;
+  --bg:#F5F5F0;--card:#FFFFFF;--txt:#1A1A1A;--txt2:#888888;
+  --bdr:#E5E5E5;--navh:68px;--sb:env(safe-area-inset-bottom,0px);
 }
 html,body{height:100%;}
 body{font-family:'Poppins',sans-serif;
@@ -56,7 +56,7 @@ section.active{display:block;}
 /* Farol */
 .farol{border-radius:4px;padding:18px 16px;margin-bottom:10px;
   background:var(--card);border:1px solid var(--bdr);border-left-width:4px;transition:border-color .4s;}
-.farol.green {border-left-color:#084734;}
+.farol.green {border-left-color:#1A6B3C;}
 .farol.yellow{border-left-color:var(--ywm);}
 .farol.red   {border-left-color:var(--rdm);}
 .fhdr{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
@@ -106,7 +106,7 @@ section.active{display:block;}
   color:var(--txt2);font-weight:700;padding:6px 0 3px;}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
 .chip{padding:4px 11px;border-radius:3px;font-size:.73rem;font-weight:600;cursor:pointer;border:1px solid var(--bdr);background:var(--card);color:var(--txt2);}
-.chip.ca{background:#CEF17B;color:#084734;border-color:#CEF17B;}
+.chip.ca{background:#1A1A1A;color:#fff;border-color:#1A1A1A;}
 .chip.cr{color:var(--gn);border-color:var(--gnm);}
 .chip.cf{color:var(--rd);border-color:var(--rdm);}
 .chip.cv{color:var(--yw);border-color:var(--ywm);}
@@ -129,7 +129,7 @@ section.active{display:block;}
   padding:12px 14px;font-size:1rem;color:var(--txt);background:var(--bg);outline:none;}
 .cinput:focus{border-color:var(--pr2);}
 .crow{display:flex;gap:8px;}.crow .cg{flex:1;}
-.btn-pri{background:#084734;color:#fff;border:none;border-radius:4px;
+.btn-pri{background:#1A1A1A;color:#fff;border:none;border-radius:4px;
   padding:13px;font-size:.95rem;font-weight:700;width:100%;cursor:pointer;letter-spacing:.02em;}
 .btn-pri:active{opacity:.82;}
 .btn-dng{background:none;color:var(--rd);border:1px solid var(--rdm);border-radius:4px;
@@ -158,7 +158,7 @@ section.active{display:block;}
   gap:2px;border:none;background:none;color:var(--txt2);cursor:pointer;font-size:.65rem;font-weight:700;padding:0;}
 .nitem .material-symbols-outlined{font-size:1.4rem;}
 .nitem.active{color:var(--pr);}
-.nitem.addbtn{background:#CEF17B;color:#084734;border-radius:4px;
+.nitem.addbtn{background:#B91C1C;color:#fff;border-radius:4px;
   margin:8px 10px;flex:1.3;font-size:.72rem;}
 .nitem.addbtn .material-symbols-outlined{font-size:1.7rem;}
 
@@ -187,7 +187,7 @@ section.active{display:block;}
 .ttgl,.sttgl,.ptgl{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
 .tbtn{padding:10px;border:1px solid var(--bdr);border-radius:4px;
   background:var(--card);color:var(--txt2);font-size:.85rem;font-weight:600;cursor:pointer;text-align:center;}
-.tbtn.sr{border-color:#084734;color:#084734;background:#CDEDB3;}
+.tbtn.sr{border-color:var(--gnm);color:var(--gn);}
 .tbtn.sd{border-color:var(--rdm);color:var(--rd);}
 .tbtn.sp{border-color:var(--pr2);color:var(--pr);}
 .cgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
