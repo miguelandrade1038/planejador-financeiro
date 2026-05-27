@@ -155,12 +155,27 @@ section.active{display:block;}
   background:var(--card);border-top:1px solid var(--bdr);
   display:flex;align-items:stretch;z-index:200;}
 .nitem{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:2px;border:none;background:none;color:var(--txt2);cursor:pointer;font-size:.65rem;font-weight:700;padding:0;}
-.nitem .material-symbols-outlined{font-size:1.4rem;}
+  gap:1px;border:none;background:none;color:var(--txt2);cursor:pointer;font-size:.58rem;font-weight:700;padding:0;}
+.nitem .material-symbols-outlined{font-size:1.25rem;}
 .nitem.active{color:var(--pr);}
 .nitem.addbtn{background:#B91C1C;color:#fff;border-radius:4px;
-  margin:8px 10px;flex:1.3;font-size:.72rem;}
-.nitem.addbtn .material-symbols-outlined{font-size:1.7rem;}
+  margin:8px 6px;flex:1.2;font-size:.58rem;}
+.nitem.addbtn .material-symbols-outlined{font-size:1.5rem;}
+
+/* Planilha */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table.spr{width:100%;border-collapse:collapse;font-size:.78rem;}
+table.spr th{background:var(--pr);color:#fff;padding:8px 10px;text-align:left;
+  font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;}
+table.spr td{padding:8px 10px;border-bottom:1px solid var(--bdr);vertical-align:middle;white-space:nowrap;}
+table.spr tr:last-child td{border-bottom:none;}
+table.spr tr.tot td{background:var(--bg);font-weight:700;border-top:2px solid var(--pr);}
+table.spr tr:nth-child(even) td{background:#FAFAFA;}
+.spr-rec{color:var(--gn);font-weight:700;}
+.spr-des{color:var(--rd);font-weight:700;}
+.spr-badge{display:inline-block;padding:2px 6px;border-radius:3px;font-size:.65rem;font-weight:700;}
+.spr-badge.pg{background:var(--gnl);color:var(--gn);}
+.spr-badge.ap{background:var(--rdl);color:var(--rd);}
 
 /* Modal */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.48);
@@ -328,6 +343,21 @@ input:checked+.swt::before{transform:translateX(22px);}
     </div>
   </section>
 
+  <!-- PLANILHA -->
+  <section id="sec-planilha">
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div class="tbl-wrap">
+        <table class="spr" id="sprTable">
+          <thead><tr>
+            <th>Data</th><th>Descrição</th><th>Categoria</th><th>Tipo</th><th>Valor</th><th>Status</th>
+          </tr></thead>
+          <tbody id="sprBody"></tbody>
+          <tfoot id="sprFoot"></tfoot>
+        </table>
+      </div>
+    </div>
+  </section>
+
   <!-- CONFIG -->
   <section id="sec-config">
     <div class="card">
@@ -397,6 +427,8 @@ input:checked+.swt::before{transform:translateX(22px);}
     <span class="material-symbols-outlined">receipt_long</span>Histórico</button>
   <button class="nitem addbtn" onclick="App.openAdd()">
     <span class="material-symbols-outlined">add</span>Lançar</button>
+  <button class="nitem" id="nav-planilha" onclick="App.goTo('planilha')">
+    <span class="material-symbols-outlined">table</span>Planilha</button>
   <button class="nitem" id="nav-relatorio" onclick="App.goTo('relatorio')">
     <span class="material-symbols-outlined">bar_chart</span>Relatório</button>
   <button class="nitem" id="nav-config" onclick="App.goTo('config')">
@@ -615,6 +647,7 @@ const App={
     document.getElementById('hdrMonth').textContent=`${MES[m-1]} ${y}`;
     if(this.view==='dashboard')this.rDash();
     if(this.view==='historico')this.rHist();
+    if(this.view==='planilha')this.rPlanilha();
     if(this.view==='relatorio')this.rRel();
     if(this.view==='config')this.rCfg();
   },
@@ -691,6 +724,42 @@ const App={
       ctx.fillStyle='#E53935';ctx.fillRect(x+bw+2,H-20-hd,bw,hd);
       const[,m]=ym.split('-');ctx.fillStyle='#6B7280';ctx.fillText(MES[+m-1].slice(0,3),x+bw,H-4);
     });
+  },
+
+  rPlanilha(){
+    const txs=DB.getTx().filter(t=>t.date.startsWith(this.ym))
+      .sort((a,b)=>a.date.localeCompare(b.date));
+    const body=document.getElementById('sprBody');
+    const foot=document.getElementById('sprFoot');
+    if(!txs.length){
+      body.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--txt2)">Nenhum lançamento neste mês.</td></tr>`;
+      foot.innerHTML='';return;
+    }
+    body.innerHTML=txs.map(t=>{
+      const r=t.type==='Receita';
+      const[y,m,d]=t.date.split('-');
+      const val=`<span class="${r?'spr-rec':'spr-des'}">${r?'+':'−'} ${Fin.brl(t.value)}</span>`;
+      const badge=t.paid?`<span class="spr-badge pg">Pago</span>`:`<span class="spr-badge ap">Pendente</span>`;
+      return`<tr onclick="App.openEdit('${t.id}')" style="cursor:pointer">
+        <td>${d}/${m}</td>
+        <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis">${t.description||'—'}</td>
+        <td>${t.category}</td>
+        <td style="font-size:.7rem;color:var(--txt2)">${t.type}</td>
+        <td>${val}</td>
+        <td>${badge}</td>
+      </tr>`;
+    }).join('');
+    const rec=txs.filter(t=>t.type==='Receita').reduce((s,t)=>s+t.value,0);
+    const des=txs.filter(t=>t.type!=='Receita').reduce((s,t)=>s+t.value,0);
+    const sal=rec-des;
+    foot.innerHTML=`<tr class="tot">
+      <td colspan="4">Total do mês</td>
+      <td colspan="2">
+        <span class="spr-rec">+${Fin.brl(rec)}</span> &nbsp;
+        <span class="spr-des">−${Fin.brl(des)}</span> &nbsp;
+        <span style="color:${sal>=0?'var(--gn)':'var(--rd)'};font-weight:800">${Fin.brl(sal)}</span>
+      </td>
+    </tr>`;
   },
 
   rCfg(){
